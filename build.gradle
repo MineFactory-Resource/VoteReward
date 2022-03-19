@@ -47,5 +47,5 @@ tasks.withType(JavaCompile).configureEach {
 spigot {
     name = 'VoteReward'
     apiVersion '1.13'
-    softDepends = ['Votifier']
+    depends = ['Votifier']
 }
