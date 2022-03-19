@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+    id 'kr.entree.spigradle' version '2.3.4'
+}
+
+group = 'net.teamuni'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+    spigotmc()
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven {
+        url 'https://jitpack.io'
+    }
+}
+
+dependencies {
+    compileOnly spigot("1.18.2-R0.1-SNAPSHOT")
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+spigot {
+    name = 'VoteReward'
+    apiVersion '1.13'
+    softDepends = ['Votifier']
+}
