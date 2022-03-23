@@ -74,4 +74,32 @@ public class Config extends Frame{
 
         Vote.setVotes(votes);
     }
+
+    public HashMap<String, String> getMessages() {
+        return messages;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getBroadcast() {
+        return broadcast;
+    }
+
+    public List<String> getCommands() {
+        return commands;
+    }
+
+    public boolean isMysql() {
+        return mysql;
+    }
+
+    public HashMap<String, String> getMysqlData() {
+        return mysqlData;
+    }
 }
