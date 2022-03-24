@@ -25,6 +25,10 @@ public class Players extends Frame implements Database {
 
     @Override
     public void save() {
+        // 기존에 남아있던 데이터를 삭제
+        configFile.delete();
+        super.load();
+
         config.set("saved_date", VoteReward.format.format(new Date()));
         for (PlayerInfo info : PlayerInfo.getInfos().values()) {
             // 내용추가
@@ -50,6 +54,7 @@ public class Players extends Frame implements Database {
             return;
         }
 
+        getInstance().getLogger().info("저장된 데이터가 오늘 정보이므로 데이터를 불러옵니다.");
 
         HashMap<UUID, PlayerInfo> infos = new HashMap<>();
         for (String s : config.getConfigurationSection("players").getKeys(false)) {

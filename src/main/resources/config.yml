@@ -4,10 +4,11 @@ config:
     message: '&f추천 2회를 달성하여 추가 보상이 지급됩니다.'
     broadcast: '%player%님께서 추천을 2회 모두 하였습니다.'
     commands:
-      - 'gove %player% minecraft:stone 3'
+      - 'give %player% minecraft:stone 3'
   messages:
     not_rec: '오늘 서버 추천을 모두하지 않았습니다.'
-    rec_list: '현재 추천하지 않은 사이트: %sites%'
+    rec: '사이트를 전부 추천하셨습니다.'
+    rec_list: '현재 추천하지 않은 사이트: '
 mysql:
   enabled: false
   host: '127.0.0.1'
@@ -19,12 +20,14 @@ mysql:
 vote:
   마인리스트:
     site: 'minelist.kr'
+    url: 'minelist.kr'
     message: '&e마인리스트에서 추천을 하여 아이템을 지급받았습니다.'
     broadcast: '%player%님께서 마인리스트에서 추천을 하였습니다.'
     commands:
       - 'give %player% minecraft:stone 1'
   마인페이지:
-    site: 'mine.page'
+    site: 'minepage'
+    url: 'mine.page'
     message: '&e마인페이지에서 추천을 하여 아이템을 지급받았습니다.'
     broadcast: '%player%님께서 마인페이지에서 추천을 하였습니다.'
     commands:

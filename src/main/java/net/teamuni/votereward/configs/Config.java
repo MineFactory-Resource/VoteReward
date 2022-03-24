@@ -40,6 +40,7 @@ public class Config extends Frame{
 
         HashMap<String, String> m = new HashMap<>();
         m.put("not_rec", ChatColor.translateAlternateColorCodes('&', config.getString("config.messages.not_rec")));
+        m.put("rec", ChatColor.translateAlternateColorCodes('&', config.getString("config.messages.rec")));
         m.put("rec_list", ChatColor.translateAlternateColorCodes('&', config.getString("config.messages.rec_list")));
         messages = m;
     }
@@ -64,7 +65,9 @@ public class Config extends Frame{
         List<Vote> votes = new ArrayList<>();
         for (String s : config.getConfigurationSection("vote").getKeys(false)) {
             Vote v = new Vote(
+                    s,
                     config.getString("vote."+s+".site"),
+                    config.getString("vote."+s+".url"),
                     config.getString("vote."+s+".message"),
                     config.getString("vote."+s+".broadcast"),
                     config.getStringList("vote."+s+".commands")

@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class PlayerInfo {
     public static final String UUID_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
-    private static HashMap<UUID, PlayerInfo> infos;
+    private static HashMap<UUID, PlayerInfo> infos = new HashMap<>();
 
     private final UUID uuid;
     private List<String> rec;
@@ -26,6 +26,13 @@ public class PlayerInfo {
         PlayerInfo.infos = infos;
     }
 
+    public static void addInfo(PlayerInfo info) {
+        if (infos.containsKey(info.getUUID()))
+            return;
+
+        infos.put(info.getUUID(), info);
+    }
+
     public UUID getUUID() {
         return uuid;
     }
@@ -34,7 +41,17 @@ public class PlayerInfo {
         return rec;
     }
 
+    public void addRec(String s) {
+        if (!rec.contains(s))
+            rec.add(s);
+    }
+
     public List<String> getReward() {
         return reward;
+    }
+
+    public void addReward(String s) {
+        if (!reward.contains(s))
+            reward.add(s);
     }
 }

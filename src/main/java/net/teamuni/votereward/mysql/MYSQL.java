@@ -17,6 +17,7 @@ public class MYSQL implements Database{
     private final String CREATE;
     private final String SELECT;
     private final String UPSERT;
+    private final String DELETE;
 
     public MYSQL() {
         HikariConfig config = new HikariConfig();
@@ -43,6 +44,7 @@ public class MYSQL implements Database{
         SELECT = "SELECT * FROM `" + d.get("table") + "`;";
         UPSERT = "INSERT INTO `" + d.get("table") + "` (`uuid`, `recommend`, `reward`) VALUES ('%1$s', '%2$s', '%3$s') "
                 + "ON DUPLICATE KEY UPDATE `recommend` = '%2$s', `reward` = '%3$s';";
+        DELETE = "DROP TABLE IF EXISTS `" + d.get("table") + "`;";
 
         load();
     }
@@ -76,10 +78,17 @@ public class MYSQL implements Database{
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(SELECT)) {
             while (rs.next()) {
-                if (!Pattern.matches(PlayerInfo.UUID_PATTERN, rs.getString("uuid"))) {
+                if (Pattern.matches(PlayerInfo.UUID_PATTERN, rs.getString("uuid"))) {
                     UUID uuid = UUID.fromString(rs.getString("uuid"));
-                    List<String> rec = Arrays.asList(rs.getString("recommend").split(", "));
-                    List<String> reward = Arrays.asList(rs.getString("reward").split(", "));
+
+                    List<String> rec = new ArrayList<>();
+                    List<String> reward = new ArrayList<>();
+
+                    if (!rs.getString("recommend").isEmpty() && rs.getString("recommend") != null)
+                        rec.addAll(Arrays.asList(rs.getString("recommend").split(", ")));
+
+                    if (!rs.getString("reward").isEmpty() && rs.getString("reward") != null)
+                        reward.addAll(Arrays.asList(rs.getString("reward").split(", ")));
 
                     PlayerInfo info = new PlayerInfo(uuid, rec, reward);
 
@@ -88,9 +97,15 @@ public class MYSQL implements Database{
                 } else if (rs.getString("uuid").equals("SAVEDDATE")) {
                     String savedDate = rs.getString("recommend");
 
+                    // 오늘 날짜가 아닌 경우
                     if (!savedDate.equals(VoteReward.format.format(new Date()))) {
+                        // 기존 데이터 삭제
+                        stmt.execute(DELETE);
+                        PlayerInfo.setInfos(new HashMap<>());
                         return;
                     }
+
+                    getInstance().getLogger().info("저장된 데이터가 오늘 정보이므로 데이터를 불러옵니다.");
                 }
                 PlayerInfo.setInfos(infos);
 
@@ -115,6 +130,10 @@ public class MYSQL implements Database{
 
         try (Connection conn = ds.getConnection();
              Statement stmt = conn.createStatement()) {
+            // 남은 데이터 삭제
+            stmt.execute(DELETE);
+
+            checkTable();
 
             stmt.execute(String.format(UPSERT, "SAVEDDATE", VoteReward.format.format(new Date()), VoteReward.format.format(new Date())));
 
