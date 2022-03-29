@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     compileOnly spigot("1.18.2-R0.1-SNAPSHOT")
+    implementation 'com.zaxxer:HikariCP:5.0.1'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
@@ -47,5 +48,16 @@ tasks.withType(JavaCompile).configureEach {
 spigot {
     name = 'VoteReward'
     apiVersion '1.13'
-    softDepends = ['Votifier']
+    depends = ['Votifier']
+    commands {
+        추천 {
+            usage '/<command>'
+            permission 'votereward.user'
+        }
+    }
+    permissions {
+        'votereward.user' {
+            defaults 'true'
+        }
+    }
 }
